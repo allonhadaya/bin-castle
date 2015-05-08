@@ -2,7 +2,8 @@
 # start or stop a screencast
 
 PIDFILE="${HOME}/.screencast.pid"
-OUTFILE="/tmp/out.mpg"
+OUTFILE="/tmp/out.avi"
+FINALFILE="${HOME}/Videos/screencast--$(date +'%Y-%m-%d--%H-%M-%S').avi"
 
 if [ -s $PIDFILE ] && [ -d "/proc/$(cat $PIDFILE)" ]; then
   # send SIG_TERM to screen recorder
@@ -10,7 +11,7 @@ if [ -s $PIDFILE ] && [ -d "/proc/$(cat $PIDFILE)" ]; then
   # clear the pidfile
   rm $PIDFILE
   # move the screencast into the user's video directory
-  mv $OUTFILE "${HOME}/Videos/screencast-$(date +'%F-%T').mpg"
+  mv $OUTFILE $FINALFILE
 else
   # define aliases
   shopt -s expand_aliases &&
