@@ -1,0 +1,38 @@
+#!/bin/bash
+# start or stop a screencast
+
+PIDFILE="${HOME}/.screencast.pid"
+OUTFILE="/tmp/out.mpg"
+
+if [ -s $PIDFILE ] && [ -d "/proc/$(cat $PIDFILE)" ]; then
+  # send SIG_TERM to screen recorder
+  kill $(cat $PIDFILE)
+  # clear the pidfile
+  rm $PIDFILE
+  # move the screencast into the user's video directory
+  mv $OUTFILE "${HOME}/Videos/screencast-$(date +'%F-%T').mpg"
+else
+  # define aliases
+  shopt -s expand_aliases &&
+  alias win='echo "$WINDOW_INFO"' &&
+  alias val="sed 's/.*:\s*//'" &&
+  # get target window info
+  WINDOW_INFO=$(xwininfo -id $(xdotool getwindowfocus)) &&
+  # parse dimensions
+  X=$(win | grep -i absolute | grep -i x | val) &&
+  Y=$(win | grep -i absolute | grep -i y | val) &&
+  WIDTH=$(win | grep -vi border | grep -i 'width' | val) &&
+  HEIGHT=$(win | grep -vi border | grep -i 'height' | val) &&
+  # write to the pidfile
+  echo $$ > $PIDFILE &&
+  # let the recording process take over this pid
+  exec avconv \
+    -f x11grab \
+    -show_region 1 \
+    -r 25 \
+    -s "${WIDTH}x${HEIGHT}" \
+    -i ":0.0+${X},${Y}" \
+    -y \
+    /tmp/out.mpg
+fi
+
