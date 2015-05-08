@@ -33,6 +33,6 @@ else
     -s "${WIDTH}x${HEIGHT}" \
     -i ":0.0+${X},${Y}" \
     -y \
-    /tmp/out.mpg
+    $OUTFILE
 fi
 
