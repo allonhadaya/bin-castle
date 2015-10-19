@@ -1,0 +1,2 @@
+#!/bin/sh
+java -jar ~/src/burpsuite_free_v1.6.28.jar

@@ -1,0 +1,2 @@
+#!/bin/sh
+secret_tunnel && chromium-browser --proxy-server=SOCKS5://localhost:8080; killall 'secret_tunnel'
